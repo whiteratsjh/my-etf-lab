@@ -8,6 +8,3 @@ base = "light"
 
 [client]
 toolbarMode = "minimal"
-
-[global]
-logLevel = "debug"
