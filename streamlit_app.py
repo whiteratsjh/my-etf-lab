@@ -43,7 +43,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 코드뷰기를 위해 초기 페이지 값 결정
-query_params = st.query_params
+query_params = st.experimental_get_query_params()
 current_page = query_params.get("page", "dashboard")
 current_page = unquote(current_page)
 
