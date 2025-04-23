@@ -1,7 +1,6 @@
 [server]
 headless = false
 runOnSave = true
-fileWatcherType = "watchdog"  # "poll" 도 가능하나 성능이 떨어짐
 
 [theme]
 base = "light"
