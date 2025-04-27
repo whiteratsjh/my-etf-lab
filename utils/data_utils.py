@@ -5,15 +5,18 @@ import yfinance as yf
 from bs4 import BeautifulSoup
 
 # 금리 및 지수 가격 조회
-def fetch_price(ticker: str):
+def fetch_price(ticker):
     try:
-        data = yf.Ticker(ticker).history(period="1d")
+        # Fetch data for the last 5 days to handle weekends/holidays
+        data = yf.Ticker(ticker).history(period="5d")
         if not data.empty:
-            return data['Close'].iloc[-1]
+            # Get the most recent available closing price
+            return data["Close"].iloc[-1]
         else:
-            return None
-    except Exception:
-        return None
+            return None  # Return None if no data is available
+    except Exception as e:
+        print(f"Error fetching data for {ticker}: {e}")
+        return None  # Return None if an error occurs
 
 # 배당 정보 크롤링
 @st.cache_data(ttl=3600)

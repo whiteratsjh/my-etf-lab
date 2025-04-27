@@ -23,8 +23,8 @@ def get_change(ticker):
         return None
 
 def add_fibonacci_lines(fig, high, low):
-    levels = [0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]
-    colors = ["#ffe6e6", "#ffcccc", "#ff9999", "#ff6666", "#ff3333", "#cc0000", "#990000"]
+    levels = [0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]  # Complete the levels list
+    colors = ["#ffe6e6", "#ffcccc", "#ff9999", "#ff6666", "#ff3333", "#cc0000", "#990000"]  # Define colors
     for level, color in zip(levels, colors):
         price = high - (high - low) * level
         fig.add_hline(
@@ -154,16 +154,45 @@ def render():
                 data = yf.Ticker(ind["ticker"]).history(period="1y")
                 if not data.empty:
                     close = data["Close"]
+                    high_52w = close.max()  # 52-week high
+                    low_52w = close.min()  # 52-week low
+                    current_price = close.iloc[-1]  # Current price
+
+                    # Create the chart
                     fig = px.line(data, x=data.index, y="Close", title=ind["name"])
                     fig.update_layout(
-                        yaxis_range=[close.min() * 0.95, close.max() * 1.05],
+                        yaxis_range=[low_52w * 0.95, high_52w * 1.05],
                         height=500
                     )
-                    if ind["ticker"] == "^VIX":
-                        for level in [15, 20, 25, 30]:
-                            fig.add_hline(y=level, line_dash="dash", annotation_text=str(level))
-                    if ind["ticker"] in ["^GSPC", "^IXIC", "^DJI"]:
-                        fig = add_fibonacci_lines(fig, close.max(), close.min())
+
+                    # Add Fibonacci levels
+                    levels = [0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]
+                    for level in levels:
+                        price = high_52w - (high_52w - low_52w) * level
+                        fig.add_hline(
+                            y=price,
+                            line_dash="dot",
+                            line_color="gray",
+                            annotation_text=f"{level:.3f}",
+                            annotation_position="top right"
+                        )
+
+                    # Highlight the region where the current price lies
+                    for i in range(len(levels) - 1):
+                        upper = high_52w - (high_52w - low_52w) * levels[i]
+                        lower = high_52w - (high_52w - low_52w) * levels[i + 1]
+                        if lower <= current_price <= upper:
+                            fig.add_shape(
+                                type="rect",
+                                x0=data.index.min(),
+                                x1=data.index.max(),
+                                y0=lower,
+                                y1=upper,
+                                fillcolor="rgba(173, 216, 230, 0.3)",  # Light blue shading
+                                line_width=0,
+                            )
+                            break
+
                     st.plotly_chart(fig, use_container_width=True)
                 else:
                     st.info("데이터가 없습니다.")
