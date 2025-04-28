@@ -72,5 +72,9 @@ elif current_page == "stock_calc":
     import pages.stock_calc as stock_calc
     importlib.reload(stock_calc)
     stock_calc.render()
+elif current_page == "favorite_stocks":  # 관심종목 페이지
+    import pages.favorite_stocks as favorite_stocks
+    importlib.reload(favorite_stocks)
+    favorite_stocks.render()
 else:
     st.error("Page not found.")
