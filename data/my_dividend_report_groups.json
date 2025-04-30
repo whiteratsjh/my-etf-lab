@@ -1,0 +1,45 @@
+{
+  "일드맥스 A그룹": [
+    "GOOY",
+    "SNOY",
+    "XOMO",
+    "OARK",
+    "TSLY",
+    "TSMY",
+    "CRSH",
+    "YBIT"
+  ],
+  "일드맥스 B그룹": [
+    "FBY",
+    "GDXY",
+    "BABO",
+    "JPMO",
+    "MRNY",
+    "MARO",
+    "NVDY",
+    "PLTY"
+  ],
+  "일드맥스 C그룹": [
+    "ABNY",
+    "AMDY",
+    "CONY",
+    "CVNY",
+    "FIAT",
+    "MSFO",
+    "NFLY",
+    "PYPY"
+  ],
+  "일드맥스 D그룹": [
+    "AIYY",
+    "AMZY",
+    "SMCY",
+    "DISO",
+    "APLY",
+    "YQQQ",
+    "MSTY"
+  ],
+  "일반해외ETF": [
+    "SCHD",
+    "JEPI"
+  ]
+}
