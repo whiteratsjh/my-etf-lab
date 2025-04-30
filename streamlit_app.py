@@ -76,5 +76,9 @@ elif current_page == "favorite_stocks":  # 관심종목 페이지
     import pages.favorite_stocks as favorite_stocks
     importlib.reload(favorite_stocks)
     favorite_stocks.render()
+elif current_page == "my_dividend_report":
+    import pages.my_dividend_report as my_dividend_report
+    importlib.reload(my_dividend_report)
+    my_dividend_report.render_page()
 else:
     st.error("Page not found.")

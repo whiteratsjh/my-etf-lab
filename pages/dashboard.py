@@ -23,8 +23,8 @@ def get_change(ticker):
         return None
 
 def add_fibonacci_lines(fig, high, low):
-    levels = [0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]  # Complete the levels list
-    colors = ["#ffe6e6", "#ffcccc", "#ff9999", "#ff6666", "#ff3333", "#cc0000", "#990000"]  # Define colors
+    levels = [0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]
+    colors = ["#ffe6e6", "#ffcccc", "#ff9999", "#ff6666", "#ff3333", "#cc0000", "#990000"]
     for level, color in zip(levels, colors):
         price = high - (high - low) * level
         fig.add_hline(
@@ -50,6 +50,7 @@ def render():
     gold = fetch_price("GC=F")
     oil = fetch_price("CL=F")
     copper = fetch_price("HG=F")  # 구리 선물
+    russell2000 = fetch_price("^RUT")  # 러쉘2000 지수
 
     spread_10y_3m  = tnx - irx if tnx and irx else None
     spread_30y_10y = tyx - tnx if tyx and tnx else None
@@ -59,13 +60,14 @@ def render():
         {"name": "S&P 500", "ticker": "^GSPC", "value": sp500},
         {"name": "다우존스", "ticker": "^DJI", "value": dji},
         {"name": "나스닥", "ticker": "^IXIC", "value": nasdaq},
+        {"name": "러쉘2000", "ticker": "^RUT", "value": russell2000},
         {"name": "달러지수", "ticker": "DX-Y.NYB", "value": usd_idx},
         {"name": "금", "ticker": "GC=F", "value": gold},
         {"name": "원유", "ticker": "CL=F", "value": oil},
         {"name": "구리", "ticker": "HG=F", "value": copper},
-        {"name": "10년 수익률", "ticker": "^TNX", "value": tnx},
-        {"name": "30년 수익률", "ticker": "^TYX", "value": tyx},
-        {"name": "3개월 수익률", "ticker": "^IRX", "value": irx},
+        {"name": "10년 국채 수익률", "ticker": "^TNX", "value": tnx},
+        {"name": "30년 국채 수익률", "ticker": "^TYX", "value": tyx},
+        {"name": "3개월 국채 수익률", "ticker": "^IRX", "value": irx}
     ]
     if spread_10y_3m is not None:
         indicators.append({"name": "10년-3개월 차이", "ticker": "spread_10y_3m", "value": spread_10y_3m})
@@ -154,18 +156,16 @@ def render():
                 data = yf.Ticker(ind["ticker"]).history(period="1y")
                 if not data.empty:
                     close = data["Close"]
-                    high_52w = close.max()  # 52-week high
-                    low_52w = close.min()  # 52-week low
-                    current_price = close.iloc[-1]  # Current price
+                    high_52w = close.max()
+                    low_52w = close.min()
+                    current_price = close.iloc[-1]
 
-                    # Create the chart
                     fig = px.line(data, x=data.index, y="Close", title=ind["name"])
                     fig.update_layout(
                         yaxis_range=[low_52w * 0.95, high_52w * 1.05],
                         height=500
                     )
 
-                    # Add Fibonacci levels
                     levels = [0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]
                     for level in levels:
                         price = high_52w - (high_52w - low_52w) * level
@@ -177,7 +177,6 @@ def render():
                             annotation_position="top right"
                         )
 
-                    # Highlight the region where the current price lies
                     for i in range(len(levels) - 1):
                         upper = high_52w - (high_52w - low_52w) * levels[i]
                         lower = high_52w - (high_52w - low_52w) * levels[i + 1]
@@ -188,7 +187,7 @@ def render():
                                 x1=data.index.max(),
                                 y0=lower,
                                 y1=upper,
-                                fillcolor="rgba(173, 216, 230, 0.3)",  # Light blue shading
+                                fillcolor="rgba(173, 216, 230, 0.3)",
                                 line_width=0,
                             )
                             break

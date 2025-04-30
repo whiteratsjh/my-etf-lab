@@ -39,9 +39,9 @@ def render_nav(active_page: str, direction: str = "horizontal"):
         "etfs": "📘 ETF 분석",
         "stocks": "🟧 개별 종목 분석",
         "stock_calc": "🧮 매수 계산기",
-        "favorite_stocks": "⭐ 관심종목"
+        "favorite_stocks": "⭐ 관심종목",
+        "my_dividend_report": "💵 배당 리포트"  # 추가된 항목
     }
-
 
     links_html = "".join([
         f'<a class="nav-link {"active" if page == active_page else ""}" href="?page={page}">{label}</a>'
